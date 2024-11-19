@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="8dp">
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardViewWine"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardBackgroundColor="#8A0B0B"
+        app:cardCornerRadius="20dp"
+        app:cardUseCompatPadding="false">
+        <!--       55CEAAFF -->
+        <!--        android:addStatesFromChildren="false"-->
+        <!--        android:animationCache="true"-->
+<!--
+        android:clickable="true"
+        android:focusable="true"
+-->
+
+        <ImageView
+            android:id="@+id/wineImage"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="start"
+            android:background="@color/white"
+            android:src="@drawable/ic_launcher_foreground" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="110dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/wineName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Wine Name"
+                android:textColor="@color/white"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/wineYear"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Year"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/wineType"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Type"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/wineCalories"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Calories"
+                android:textColor="@color/white" />
+
+            <TextView
+                android:id="@+id/wineIngredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Ingredients"
+                android:textColor="@color/white" />
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>

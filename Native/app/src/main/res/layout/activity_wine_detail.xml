@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/wine_name_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Name" />
+
+    <EditText
+        android:id="@+id/wine_type_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Type" />
+
+    <EditText
+        android:id="@+id/wine_year_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Year"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/wine_calories_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Calories"
+        android:inputType="number" />
+
+    <EditText
+        android:id="@+id/wine_ingredients_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ingredients" />
+
+    <EditText
+        android:id="@+id/wine_photo_u_r_l_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Photo URL" />
+    <Button
+        android:id="@+id/save_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Save" />
+
+</LinearLayout>
