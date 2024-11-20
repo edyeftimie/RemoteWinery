@@ -17,7 +17,7 @@ A native Android app built with Kotlin, allowing users to manage their wine coll
 ## Features - TODO
 
 ### In app photos
-<div style="display: flex; flex-wrap: wrap; justify-content: space-evenly; gap: 20px;">
+<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
   <!-- First row -->
   <div style="flex: 1 0 45%; text-align: center;">
     <p>Home page - list of wines</p>
