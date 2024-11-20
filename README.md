@@ -8,6 +8,7 @@ A native Android app built with Kotlin, allowing users to manage their wine coll
 - **Input Validation**: Ensures that wine details are accurately entered and displayed.
 - **Activity/Fragment Logic**: Utilizes Activities and Fragments for managing app navigation and displaying wine details.
 - **ModelView/Adapter**: Implemented using the MVVM architecture with a WineViewModel, which interacts with the WineAdapter to display data.
+- **RecyclerView**: Efficiently displays a list of wines using RecyclerView, allowing smooth scrolling and dynamic data updates.
 - **XML layouts**: Views are created using XML layouts for consistent and responsive design. It incorporates modern **Jetpack Compose** elements.
 
 ### Non-Native Language - TODO
