@@ -17,37 +17,14 @@ A native Android app built with Kotlin, allowing users to manage their wine coll
 ## Features - TODO
 
 ### In app photos
-<div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 20px;">
-  <!-- First row -->
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Home page - list of wines</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg" width="300" />
-  </div>
+|  **Home page - list of wines**  |  **Edit a wine**  |
+|---------------------------------|--------------------|
+|  ![Home page - list of wines](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg)  |  ![Edit a wine](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Edit%20wine.jpeg)  |
 
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Edit a wine</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Edit%20wine.jpeg" width="300" />
-  </div>
+|  **Delete a wine**  |  **Wine deleted**  |
+|---------------------|--------------------|
+|  ![Delete a wine](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20wine.jpeg)  |  ![Wine deleted](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20confirmed.jpeg)  |
 
-  <!-- Second row -->
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Delete a wine</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20wine.jpeg" width="300" />
-  </div>
-
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Wine deleted</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20confirmed.jpeg" width="300" />
-  </div>
-
-  <!-- Third row -->
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Add wine form - Data validation example</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation.jpeg" width="300" />
-  </div>
-
-  <div style="flex: 1 0 45%; text-align: center;">
-    <p>Add wine form - Data validation example 2</p>
-    <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation%202.jpeg" width="300" />
-  </div>
-</div>
+|  **Add wine form - Data validation example**  |  **Add wine form - Data validation example 2**  |
+|-----------------------------------------------|-----------------------------------------------|
+|  ![Add wine form - Data validation example](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation.jpeg)  |  ![Add wine form - Data validation example 2](https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation%202.jpeg)  |
