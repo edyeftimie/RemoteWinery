@@ -19,30 +19,30 @@ A native Android app built with Kotlin, allowing users to manage their wine coll
 ### In app photos
 <div align="center">
   <p> Home page - list of wines </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg"  width="400" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg"  width="300" />
 </div>
 
 <div align="center">
   <p> Edit a wine </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Edit%20wine.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Edit%20wine.jpeg"  width="300" />
 </div>
 
 <div align="center">
   <p> Delete a wine </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20wine.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20wine.jpeg"  width="300" />
 </div>
 
 <div align="center">
   <p> Wine deleted </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20confirmed.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Delete%20confirmed.jpeg"  width="300" />
 </div>
 
 <div align="center">
   <p> Add wine form - Data validation example </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation.jpeg"  width="300" />
 </div>
 
 <div align="center">
   <p> Add wine form - Data validation example 2 </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation%202.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/Add%20data%20validation%202.jpeg"  width="300" />
 </div>
