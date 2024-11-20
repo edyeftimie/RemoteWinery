@@ -19,7 +19,7 @@ A native Android app built with Kotlin, allowing users to manage their wine coll
 ### In app photos
 <div align="center">
   <p> Home page - list of wines </p>
-  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg"  width="100" />
+  <img src="https://github.com/edyeftimie/RemoteWinery/blob/main/InAppPhotos/List%20view.jpeg"  width="400" />
 </div>
 
 <div align="center">
