@@ -44,4 +44,14 @@ class Wine {
     map['id'] = id;
     return map;
   }
+  //make a fromMap method that has parameter only one element from the map, not the map itself
+  Wine.fromMap(Map<dynamic, dynamic> map) :
+    id = map['id'],
+    nameOfProducer = map['nameOfProducer'],
+    type = map['type'],
+    yearOfProduction = map['yearOfProduction'],
+    region = map['region'],
+    listOfIngredients = map['listOfIngredients'],
+    calories = map['calories'],
+    photoURL = map['photoURL'];
 }

@@ -77,8 +77,6 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
         ],
       ),
 
-
-      body: ListView.builder(
       //card:
       //  sized box:
       //    row:
@@ -89,101 +87,220 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
       //      expanded:
       //        column:
       //          attributes
-        restorationId: 'winesListView',
-        padding: const EdgeInsets.all(3.0),
-        itemCount: _producerService.getWines().length,
-        itemBuilder: (BuildContext context, int index) {
-          final Wine wine = _producerService.getWines()[index];
-          return GestureDetector(
-            onTap: () {
-              _navigateToEditingWine(wine);
-            },
-            onLongPress: ()  {
-              _navigateToDeletingWine(wine);
-            },
-            child: Padding(
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: Card(
-                color: const Color.fromARGB(255, 139, 17, 9),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(25.0),
-                  side: BorderSide(
-                    // color: Colors.white,
-                    color: const Color.fromARGB(255, 139, 17, 9),
-                    width: 0.1
-                  ),
-                ),
-                child: SizedBox(
-                  height: 120, // Set the height of the card here
-                  child: Row(
-                    children: [
-                      // Image container with fixed height
-                      Container(
-                        width: 110, // Width of the image container
-                        height: 120, // Height should match the Card's height
 
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(25.0),
-                            bottomLeft: Radius.circular(25.0),
-                          )
-                        ),
-
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.only (
-                            topLeft: Radius.circular(25.0),
-                            bottomLeft: Radius.circular(25.0),
-                          ),
-                          child: Image.network(
-                            wine.photoURL,
-                            fit: BoxFit.fitHeight,
-                            loadingBuilder: (context, child, loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              } else {
-                                return Center(
-                                  child: CircularProgressIndicator(
-                                    value: loadingProgress.expectedTotalBytes != null
-                                        ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                        : null,
-                                  ),
-                                );
-                              }
-                            },
-                            errorBuilder: (context, error, stackTrace) {
-                              return Icon(Icons.error, size: 40, color: Colors.redAccent);
-                            },
-                          ),
+      body: FutureBuilder<List<Wine>>(
+        future: _producerService.getWines(),
+        builder: (BuildContext context, AsyncSnapshot<List<Wine>> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center (
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError){
+            return Center (
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else if (snapshot.hasData && snapshot.data!.isNotEmpty) {
+            final wines = snapshot.data!;
+            return ListView.builder(
+              restorationId: 'winesListView',
+              padding: const EdgeInsets.all(3.0),
+              itemCount: wines.length,
+              itemBuilder: (BuildContext context, int index) {
+                final Wine wine = wines[index];
+                return GestureDetector(
+                  onTap: () {
+                    _navigateToEditingWine(wine);
+                  },
+                  onLongPress: ()  {
+                    _navigateToDeletingWine(wine);
+                  },
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 8.0),
+                    child: Card(
+                      color: const Color.fromARGB(255, 139, 17, 9),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25.0),
+                        side: BorderSide(
+                          // color: Colors.white,
+                          color: const Color.fromARGB(255, 139, 17, 9),
+                          width: 0.1
                         ),
                       ),
-
-                      SizedBox(width: 10),  // Space between image and text
-
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      child: SizedBox(
+                        height: 120, // Set the height of the card here
+                        child: Row(
                           children: [
-                            Text(
-                              wine.nameOfProducer,
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                            // Image container with fixed height
+                            Container(
+                              width: 110, // Width of the image container
+                              height: 120, // Height should match the Card's height
+
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(25.0),
+                                  bottomLeft: Radius.circular(25.0),
+                                )
+                              ),
+
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.only (
+                                  topLeft: Radius.circular(25.0),
+                                  bottomLeft: Radius.circular(25.0),
+                                ),
+                                child: Image.network(
+                                  wine.photoURL,
+                                  fit: BoxFit.fitHeight,
+                                  loadingBuilder: (context, child, loadingProgress) {
+                                    if (loadingProgress == null) {
+                                      return child;
+                                    } else {
+                                      return Center(
+                                        child: CircularProgressIndicator(
+                                          value: loadingProgress.expectedTotalBytes != null
+                                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                              : null,
+                                        ),
+                                      );
+                                    }
+                                  },
+                                  errorBuilder: (context, error, stackTrace) {
+                                    return Icon(Icons.error, size: 40, color: Colors.redAccent);
+                                  },
+                                ),
+                              ),
                             ),
-                            Text(wine.type, style: TextStyle(color: Colors.white)),
-                            Text(wine.yearOfProduction.toString(), style: TextStyle(color: Colors.white)),
-                            Text(wine.region, style: TextStyle(color: Colors.white)),
-                            Text(wine.listOfIngredients, style: TextStyle(color: Colors.white)),
-                            Text(wine.calories.toString(), style: TextStyle(color: Colors.white)),
+
+                            SizedBox(width: 10),  // Space between image and text
+
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    wine.nameOfProducer,
+                                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                                  ),
+                                  Text(wine.type, style: TextStyle(color: Colors.white)),
+                                  Text(wine.yearOfProduction.toString(), style: TextStyle(color: Colors.white)),
+                                  Text(wine.region, style: TextStyle(color: Colors.white)),
+                                  Text(wine.listOfIngredients, style: TextStyle(color: Colors.white)),
+                                  Text(wine.calories.toString(), style: TextStyle(color: Colors.white)),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ),
-          );
-        },
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: Text('No wines available'),
+            );
+          }
+        }
+
       ),
+      // body: ListView.builder(
+      //   restorationId: 'winesListView',
+      //   padding: const EdgeInsets.all(3.0),
+      //   itemCount: _producerService.getWines().length,
+      //   itemBuilder: (BuildContext context, int index) {
+      //     final Wine wine = _producerService.getWines()[index];
+      //     return GestureDetector(
+      //       onTap: () {
+      //         _navigateToEditingWine(wine);
+      //       },
+      //       onLongPress: ()  {
+      //         _navigateToDeletingWine(wine);
+      //       },
+      //       child: Padding(
+      //         padding: EdgeInsets.only(bottom: 8.0),
+      //         child: Card(
+      //           color: const Color.fromARGB(255, 139, 17, 9),
+      //           shape: RoundedRectangleBorder(
+      //             borderRadius: BorderRadius.circular(25.0),
+      //             side: BorderSide(
+      //               // color: Colors.white,
+      //               color: const Color.fromARGB(255, 139, 17, 9),
+      //               width: 0.1
+      //             ),
+      //           ),
+      //           child: SizedBox(
+      //             height: 120, // Set the height of the card here
+      //             child: Row(
+      //               children: [
+      //                 // Image container with fixed height
+      //                 Container(
+      //                   width: 110, // Width of the image container
+      //                   height: 120, // Height should match the Card's height
+
+      //                   decoration: BoxDecoration(
+      //                     color: Colors.white,
+      //                     borderRadius: BorderRadius.only(
+      //                       topLeft: Radius.circular(25.0),
+      //                       bottomLeft: Radius.circular(25.0),
+      //                     )
+      //                   ),
+
+      //                   child: ClipRRect(
+      //                     borderRadius: BorderRadius.only (
+      //                       topLeft: Radius.circular(25.0),
+      //                       bottomLeft: Radius.circular(25.0),
+      //                     ),
+      //                     child: Image.network(
+      //                       wine.photoURL,
+      //                       fit: BoxFit.fitHeight,
+      //                       loadingBuilder: (context, child, loadingProgress) {
+      //                         if (loadingProgress == null) {
+      //                           return child;
+      //                         } else {
+      //                           return Center(
+      //                             child: CircularProgressIndicator(
+      //                               value: loadingProgress.expectedTotalBytes != null
+      //                                   ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+      //                                   : null,
+      //                             ),
+      //                           );
+      //                         }
+      //                       },
+      //                       errorBuilder: (context, error, stackTrace) {
+      //                         return Icon(Icons.error, size: 40, color: Colors.redAccent);
+      //                       },
+      //                     ),
+      //                   ),
+      //                 ),
+
+      //                 SizedBox(width: 10),  // Space between image and text
+
+      //                 Expanded(
+      //                   child: Column(
+      //                     crossAxisAlignment: CrossAxisAlignment.start,
+      //                     children: [
+      //                       Text(
+      //                         wine.nameOfProducer,
+      //                         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+      //                       ),
+      //                       Text(wine.type, style: TextStyle(color: Colors.white)),
+      //                       Text(wine.yearOfProduction.toString(), style: TextStyle(color: Colors.white)),
+      //                       Text(wine.region, style: TextStyle(color: Colors.white)),
+      //                       Text(wine.listOfIngredients, style: TextStyle(color: Colors.white)),
+      //                       Text(wine.calories.toString(), style: TextStyle(color: Colors.white)),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+      //         ),
+      //       ),
+      //     );
+      //   },
+      // ),
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {

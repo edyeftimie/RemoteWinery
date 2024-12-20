@@ -147,9 +147,9 @@ class WineForm extends StatelessWidget {
                 if (!Uri.parse(value).isAbsolute) {
                   return 'Please enter a valid URL';
                 }
-                if (!value.endsWith('.jpg') && !value.endsWith('.png')) {
-                  return 'Please enter a valid image URL';
-                }
+                // if (!value.endsWith('.jpg') && !value.endsWith('.png')) {
+                //   return 'Please enter a valid image URL';
+                // }
               }
               return null;
             }
