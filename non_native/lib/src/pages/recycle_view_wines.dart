@@ -22,9 +22,11 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
     if (result != null) {
       final wine = result as Wine;
       print(wine);
+      await Future.delayed(Duration(seconds: 1));
       setState(() {
         _producerService.addWine(wine);
       });
+      debugPrint('Wine added');
     }
   }
 
@@ -36,6 +38,7 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
       setState(() {
         _producerService.updateWine(newWine);
       });
+      debugPrint('Wine updated');
     }
   }
 
