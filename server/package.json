@@ -2,7 +2,7 @@
   "name": "nodejs-mysql-project",
   "version": "1.0.0",
   "description": "wines crud project",
-  "main": "test_server.js",
+  "main": "connect_db.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -10,6 +10,9 @@
   "license": "ISC",
   "dependencies": {
     "dotenv": "^16.4.7",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.13.1",
+    "pg-format": "^1.0.4",
+    "ws": "^8.18.0"
   }
 }
