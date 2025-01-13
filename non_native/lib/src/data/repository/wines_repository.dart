@@ -4,15 +4,9 @@ import "package:remote_winery/src/domain/model/wine.dart";
 
 class WinesRepository {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
-  List<Wine> _wines = [];
 
   Future<List<Wine>> getWines() async {
-    // for (Wine wine in _wines) {
-    //   await _databaseHelper.insertWine(wine);
-    // }
-    _wines = await _databaseHelper.getWines();
-    return _wines;
-    // return await _databaseHelper.getWines();
+    return await _databaseHelper.getWines();
   }
 
   Future<Wine> getWineById(int id) async {
@@ -20,18 +14,14 @@ class WinesRepository {
   }
 
   Future<bool> addWine(Wine wine) async {
-    wine.id = await _databaseHelper.getNextWineID();
-    _wines.add(wine);
     return await _databaseHelper.insertWine(wine) > 0;
   }
 
   Future<bool> updateWine(Wine wine) async {
-    _wines[_wines.indexWhere((element) => element.id == wine.id)] = wine;
     return await _databaseHelper.updateWine(wine) > 0;
   }
 
   Future<bool> removeWine(int wineID) async {
-    _wines.removeWhere((element) => element.id == wineID);
     return await _databaseHelper.deleteWine(wineID) > 0;
   }
 
@@ -58,42 +48,4 @@ class WinesRepository {
   //   Wine(19, "Masseto", "Red", 1970, "Tuscany", "Merlot, natural yeasts", 170, "https://trianglewineco.com/cdn/shop/files/wine-tomasello-raspberry-wine-42536281506081.png?v=1704823377"),
   // ];
   // int index = 20;
-
-  // bool addWine(Wine wine) {
-  //   if (_wines.contains(wine)) {
-  //     return false;
-  //   }
-  //   wine.id = index + 1;
-  //   _wines.add(wine);
-  //   index += 1;
-  //   return true;
-  // }
-
-  // bool removeWine(int wineID) {
-  //   if (!_wines.any((element) => element.id == wineID)) {
-  //     return false;
-  //   }
-  //   _wines.removeWhere((element) => element.id == wineID);
-  //   return true;
-  // }
-
-  // bool updateWine(Wine wine) {
-  //   int index = _wines.indexWhere((element) => element.id == wine.id);
-  //   if (index == -1) {
-  //     return false;
-  //   }
-  //   _wines[index] = wine;
-  //   return true;
-  // }
-
-  // List<Wine> getWines() {
-  //   return _wines;
-  // }
-
-  // Wine getWineById(int id) {
-  //   if (!_wines.any((element) => element.id == id)) {
-  //     return Wine.empty();
-  //   }
-  //   return _wines.firstWhere((wine) => wine.id == id);
-  // }
 }
