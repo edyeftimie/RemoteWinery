@@ -23,11 +23,14 @@ class WSServer {
                     const request = JSON.parse(message);
 
                     if (request.type === 'GET') {
-                        const query = format('SELECT * FROM wine WHERE nameOfProducer = %L', request.data.nameOfProducer);
+                        const query = format('SELECT * FROM wine');
                         const result = await this.db.getData(
                             query,
                         );
-                        ws.send(JSON.stringify(result));
+                        ws.send(JSON.stringify({
+                            message: 'Data fetched',
+                            data: result.rows
+                        }));
                     } else if (request.type === 'POST') {
                         console.log(request.data);
                         const query = format ('INSERT INTO wine (nameOfProducer, type, yearOfProduction, region, listOfIngredients, calories, photoURL) VALUES (%L, %L, %L, %L, %L, %L, %L)', request.data.nameOfProducer, request.data.type, request.data.yearOfProduction, request.data.region, request.data.listOfIngredients, request.data.calories, request.data.photoURL);
@@ -37,7 +40,7 @@ class WSServer {
                         );
                         ws.send(JSON.stringify({
                                 message: 'Data inserted',
-                                data: request.data
+                                data: { id: result.rows[0].id }
                         }));
                     } else if (request.type === 'PUT') {
                         console.log(request.data);
