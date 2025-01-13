@@ -128,8 +128,7 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
                           width: 0.1
                         ),
                       ),
-                      child: SizedBox(
-                        height: 120, // Set the height of the card here
+                      child: IntrinsicHeight(
                         child: Row(
                           children: [
                             // Image container with fixed height
@@ -152,7 +151,8 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
                                 ),
                                 child: Image.network(
                                   wine.photoURL,
-                                  fit: BoxFit.fitHeight,
+                                  // fit: BoxFit.fitHeight,
+                                  fit: BoxFit.contain,
                                   loadingBuilder: (context, child, loadingProgress) {
                                     if (loadingProgress == null) {
                                       return child;
