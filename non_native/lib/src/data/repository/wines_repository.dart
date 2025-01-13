@@ -4,12 +4,15 @@ import "package:remote_winery/src/domain/model/wine.dart";
 
 class WinesRepository {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
+  List<Wine> _wines = [];
 
   Future<List<Wine>> getWines() async {
     // for (Wine wine in _wines) {
     //   await _databaseHelper.insertWine(wine);
     // }
-    return await _databaseHelper.getWines();
+    _wines = await _databaseHelper.getWines();
+    return _wines;
+    // return await _databaseHelper.getWines();
   }
 
   Future<Wine> getWineById(int id) async {
@@ -18,14 +21,17 @@ class WinesRepository {
 
   Future<bool> addWine(Wine wine) async {
     wine.id = await _databaseHelper.getNextWineID();
+    _wines.add(wine);
     return await _databaseHelper.insertWine(wine) > 0;
   }
 
   Future<bool> updateWine(Wine wine) async {
+    _wines[_wines.indexWhere((element) => element.id == wine.id)] = wine;
     return await _databaseHelper.updateWine(wine) > 0;
   }
 
   Future<bool> removeWine(int wineID) async {
+    _wines.removeWhere((element) => element.id == wineID);
     return await _databaseHelper.deleteWine(wineID) > 0;
   }
 
