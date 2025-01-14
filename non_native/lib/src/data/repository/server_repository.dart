@@ -14,26 +14,25 @@ class ServerRepository {
   ServerRepository() {
     try {
       connect().then((value) {
-        print('Connected to the server');
+        print('CONSTRUCTOR: Connected to the server');
         _broadcastStream = _channel.stream.asBroadcastStream(); // Convert to broadcast stream
       });
     } catch (e) {
-      print('Error connecting to the server: $e');
+      print('CONSTRUCTOR_ERROR: connecting to the server: $e');
     }
   }
 
   Future<bool> connect() async {
     try {
-      print('Connecting...');
       _channel = WebSocketChannel.connect(
         Uri.parse('ws://localhost:8081'),
       );
       _isConnected = true;
-      print('Connected to the server');
+      print('CONNECT: Connected to the server');
       return true;
     } catch (e) {
       _isConnected = false;
-      print('Error connecting to the server: $e');
+      print('CONNECT_ERROR: connecting to the server: $e');
       return false;
     }
   }
@@ -42,7 +41,7 @@ class ServerRepository {
     if (!_isConnected) {
       var isConnected = await connect();
       if (!isConnected) {
-        print('Error connecting to the server');
+        print('GET_ERROR connecting to the server');
         return [];
       }
     }
@@ -55,31 +54,39 @@ class ServerRepository {
     List<Wine> wines = [];
 
     // Listen to the broadcast stream for messages
-    _broadcastStream.listen((message) {
+    late StreamSubscription subscription;
+    subscription = _broadcastStream.listen((message) {
       var response = jsonDecode(message);
-      if (response['message'] == 'Data retrieved') {
-        print('Wines retrieved');
-        for (var wine in response['wines']) {
-          wines.add(Wine(
-            wine['id'],
-            wine['name'],
-            wine['type'],
-            wine['yearOfProduction'],
-            wine['region'],
-            wine['listOfIngredients'],
-            wine['calories'],
-            wine['photoURL'],
-          ));
+      print ("GET: Response fetched:");
+      if (response['message'] == 'Data fetched') {
+        print('GET: Wines retrieved');
+        if (response['data'] is List) {
+          for (var wine in response['data']) {
+            print("wine");
+            print(wine);
+            wines.add(Wine(
+              wine['id'],
+              wine['nameofproducer'],
+              wine['type'],
+              wine['yearofproduction'],
+              wine['region'],
+              wine['listofingredients'],
+              wine['calories'],
+              wine['photourl'],
+            ));
+          }
         }
-        completer.complete(wines);
+        completer.complete(wines); // Complete the completer with the list of wines
+        subscription.cancel(); // Cancel subscription after processing
       } else if (!completer.isCompleted) {
         completer.complete([]);
       }
-    }).onError((error) {
-      if (!completer.isCompleted) completer.completeError(error);
     });
-
-    return completer.future;
+    // .onError((error) {
+    //   if (!completer.isCompleted) completer.completeError(error);
+    //   // subscription.cancel();
+    // });
+    return completer.future; // Return the future of the completer
   }
 
   Future<int> addWine(Wine wine) async {
@@ -101,27 +108,32 @@ class ServerRepository {
     // Use Completer to get the ID response
     Completer<int> completer = Completer();
 
-    _broadcastStream.listen((message) {
-      var response = jsonDecode(message);
-      if (response['message'] == 'Data inserted') {
-        print('Wine added');
-        completer.complete(response['data']['id']);
-      } else if (!completer.isCompleted) {
-        completer.complete(-1);
+    late StreamSubscription subscription;
+    subscription = _broadcastStream.listen((message){
+      final response = jsonDecode(message);
+      if (response['message'] == 'Data inserted' && !completer.isCompleted) {
+        print('ADD: Wine added');
+        completer.complete(response['data']['id']); // Complete the completer with the ID
+        subscription.cancel(); // Cancel subscription after processing
+      } else {
+        return;
+      } 
+    }, onError: (error) {
+      if (!completer.isCompleted) {
+        completer.completeError(error);
       }
-    }).onError((error) {
-      if (!completer.isCompleted) completer.completeError(error);
+      subscription.cancel();
     });
 
     return completer.future;
   }
 
-  Future<void> updateWine(Wine wine) async {
+  Future<bool> updateWine(Wine wine) async {
     final json = jsonEncode({
       'type': 'PUT',
-      'wine': {
+      'data': {
         'id': wine.id,
-        'name': wine.nameOfProducer,
+        'nameOfProducer': wine.nameOfProducer,
         'type': wine.type,
         'yearOfProduction': wine.yearOfProduction,
         'region': wine.region,
@@ -133,24 +145,48 @@ class ServerRepository {
 
     _channel.sink.add(json);
 
-    _broadcastStream.listen((message) {
+    Completer<bool> completer = Completer();
+
+    late StreamSubscription subscription;
+    subscription = _broadcastStream.listen((message) {
       var response = jsonDecode(message);
       if (response['message'] == 'Data updated') {
-        print('Wine updated');
+        print('UPDATE: Wine updated');
+        bool succes = response['data'] ?? false;
+        completer.complete(succes);
+        subscription.cancel();
+      } else {
+        return;
       }
+    }, onError: (error) {
+      if (!completer.isCompleted) completer.completeError(error);
+      subscription.cancel();
     });
+    return completer.future;
   }
 
-  Future<void> removeWine(int id) async {
-    final json = jsonEncode({'type': 'DELETE', 'id': id});
+  Future<bool> removeWine(int id) async {
+    final json = jsonEncode({'type': 'DELETE', 'data': {'id': id}});
     _channel.sink.add(json);
 
-    _broadcastStream.listen((message) {
+    Completer<bool> completer = Completer();
+
+    late StreamSubscription subscription;
+    subscription = _broadcastStream.listen((message) {
       var response = jsonDecode(message);
       if (response['message'] == 'Data deleted') {
-        print('Wine deleted');
+        print('DELETE: Wine deleted');
+        bool succes = response['data'] ?? false;
+        completer.complete(succes);
+        subscription.cancel();
+      } else {
+        return;
       }
+    }, onError: (error) {
+      if (!completer.isCompleted) completer.completeError(error);
+      subscription.cancel();
     });
+    return completer.future;
   }
 
   Future<Wine> getWineById(int id) async {
@@ -163,7 +199,7 @@ class ServerRepository {
     _broadcastStream.listen((message) {
       var response = jsonDecode(message);
       if (response['message'] == 'Data fetched') {
-        print('Wine retrieved');
+        print('GET_ID: Wine retrieved');
         wine = Wine(
           response['wine']['id'],
           response['wine']['name'],
@@ -188,6 +224,6 @@ class ServerRepository {
     _subscription?.cancel();
     _channel.sink.close();
     _isConnected = false;
-    print('Connection closed');
+    print('CLOSE: Connection closed');
   }
 }

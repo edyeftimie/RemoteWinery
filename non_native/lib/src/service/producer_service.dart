@@ -14,17 +14,18 @@ class ProducerService {
 
   Future<void> _initializeSync() async {
     try {
+      await Future.delayed(Duration(seconds: 2));
       final List<Wine> wines = await _serverRepository.getWines();
       if (wines.isEmpty) {
         print("No wines retrieved from the server");
         return;
       }
       _winesRepository.setWines(wines);
-      print("Wines retrieved from the server");
+      print("INITIALIZING: Wines retrieved from the server");
       await _syncLogs();
-      print("Logs synced");
+      print("INITIALIZING: Logs synced");
     } catch (e) {
-      print("Error initializing sync: $e");
+      print("INITIALIZING: Error initializing sync: $e");
     }
   }
 
@@ -90,18 +91,61 @@ class ProducerService {
   }
 
   // bool removeWine(int wineID) {
-  Future removeWine(int wineID) {
-    return _winesRepository.removeWine(wineID);
+  Future removeWine(int wineID) async {
+    try {
+      await _winesRepository.removeWine(wineID);
+      final status = await _serverRepository.removeWine(wineID);
+      if (!status) {
+        print ("Remove failed in the server");
+        final log = {
+          "type": "DELETE",
+          "data": {
+            "id": wineID,
+          }
+        };
+        _logRepository.addLog(log);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print("Error removing wine: $e");
+      return false;
+    }
   }
 
   // bool updateWine(Wine wine) {
-  Future updateWine(Wine wine) {
-    return _winesRepository.updateWine(wine);
+  Future updateWine(Wine wine) async {
+    try {
+      await _winesRepository.updateWine(wine);
+      final status = await _serverRepository.updateWine(wine);
+      if (!status) {
+        print ("Update failed in the server");
+        final log = {
+          "type": "PUT",
+          "wine": {
+            "id": wine.id,
+            "name": wine.nameOfProducer,
+            "type": wine.type,
+            "yearOfProduction": wine.yearOfProduction,
+            "region": wine.region,
+            "listOfIngredients": wine.listOfIngredients,
+            "calories": wine.calories,
+            "photoURL": wine.photoURL,
+          }
+        };
+        _logRepository.addLog(log);
+        return false;
+      }
+      return true;
+    } catch (e) {
+      print("Error updating wine: $e");
+      return false;
+    }
   }
 
   // List<Wine> getWines() {
-  Future<List<Wine>> getWines() {
-    return _winesRepository.getWines();
+  Future<List<Wine>> getWines() async {
+    return await _winesRepository.getWines();
   }
 
   // Wine getWineById(int id) {

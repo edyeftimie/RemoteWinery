@@ -1,0 +1,15 @@
+-> server/ 
+    node app.js
+
+-> db
+    \dt - list tables
+    \d table_name - list columns of table
+    \d+ table_name - list columns with details
+    \l - list databases
+    \c database_name - connect to database
+    \q - quit
+    
+    pg_ctl -D "C:\Program Files\PostgreSQL\17\data" start
+    psql -U postgres -d postgres
+
+
