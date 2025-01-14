@@ -11,6 +11,17 @@ class LogRepository {
     return _logs_queue;
   }
 
+  bool editLogsWineID(int oldID, int newID) {
+    for (var log in _logs_queue) {
+      if (log["wine"]["id"] == oldID) {
+        log["wine"]["id"] = newID;
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   Map<String, dynamic> getFirstLog() {
     if (!_logs_queue.isEmpty) {
       var first_log = _logs_queue.first;

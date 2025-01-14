@@ -5,6 +5,10 @@ import "package:remote_winery/src/domain/model/wine.dart";
 class WinesRepository {
   final DatabaseHelper _databaseHelper = DatabaseHelper();
 
+  Future<void> setWines(List<Wine> wines) async {
+    await _databaseHelper.setWines(wines);
+  }
+
   Future<List<Wine>> getWines() async {
     return await _databaseHelper.getWines();
   }
@@ -15,6 +19,10 @@ class WinesRepository {
 
   Future<bool> addWine(Wine wine) async {
     return await _databaseHelper.insertWine(wine) > 0;
+  }
+
+  Future<bool> updateWineID(Wine wine, int oldID) async {
+    return await _databaseHelper.updateWineID(wine, oldID) > 0;
   }
 
   Future<bool> updateWine(Wine wine) async {

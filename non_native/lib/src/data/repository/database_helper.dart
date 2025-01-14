@@ -54,6 +54,7 @@ class DatabaseHelper {
 
   Future<int> insertWine(Wine wine) async {
     var dbClient = await database;
+    wine.id = await getNextWineID();
     return await dbClient.insert('wines', wine.toMap());
   }
 
@@ -80,6 +81,23 @@ class DatabaseHelper {
     return maps.map((wine) => Wine.fromMap(wine)).toList();
   }
 
+  Future<void> setWines(List<Wine> wines) async {
+    var dbClient = await database;
+    await clearWinesFromDB();
+    await dbClient.transaction((txn) async {
+      var batch = txn.batch();
+      for (var wine in wines) {
+        batch.insert('wines', wine.toMap());
+      }
+      await batch.commit();
+    });
+  }
+
+  Future<void> clearWinesFromDB() async {
+    var dbClient = await database;
+    await dbClient.delete('wines');
+  }
+
   Future<int> deleteWine(int id) async {
     var dbClient = await database;
     return await dbClient.delete(
@@ -96,6 +114,16 @@ class DatabaseHelper {
       wine.toMap(),
       where: 'id = ?',
       whereArgs: [wine.id]
+    );
+  }
+
+  Future<int> updateWineID(Wine wine, int oldID) async {
+    var dbClient = await database;
+    return await dbClient.update(
+      'wines',
+      wine.toMap(),
+      where: 'id = ?',
+      whereArgs: [oldID]
     );
   }
 
