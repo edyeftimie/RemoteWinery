@@ -1,3 +1,3 @@
 const WSServer = require('./server');
 
-const wss = new WSServer(8080);
+const wss = new WSServer(8081);

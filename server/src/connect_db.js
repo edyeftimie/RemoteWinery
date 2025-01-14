@@ -9,7 +9,7 @@ class DatabaseHelper {
         const client = await this.pool.connect();
         try {
             const result = await client.query(query);
-            return result.rows;
+            return result;
         } catch (error) {
             console.error('Error executing query', error.stack);
             throw error;
@@ -21,7 +21,8 @@ class DatabaseHelper {
     async postData(query) {
         const client = await this.pool.connect();
         try {
-            await client.query(query);
+            const result = await client.query(query);
+            return result;
         } catch (error) {
             console.error('Error executing query', error.stack);
             throw error;
@@ -33,7 +34,8 @@ class DatabaseHelper {
     async putData(query) {
         const client = await this.pool.connect();
         try {
-            await client.query(query);
+            const result = await client.query(query);
+            return result;
         } catch (error) {
             console.error('Error executing query', error.stack);
             throw error;
@@ -45,7 +47,8 @@ class DatabaseHelper {
     async deleteData(query) {
         const client = await this.pool.connect();
         try {
-            await client.query(query);
+            const result = await client.query(query);
+            return result;
         } catch (error) {
             console.error('Error executing query', error.stack);
             throw error;
