@@ -5,16 +5,19 @@ import 'package:remote_winery/src/settings/settings_view.dart';
 import 'package:remote_winery/src/pages/widges/delete_confirmation.dart';
 
 class RecycleViewWines extends StatefulWidget {
-  const RecycleViewWines({super.key});
-
+  const RecycleViewWines({super.key, required this.producerService});
+  final ProducerService producerService;  
   static const routeName = '/wines';
 
   @override
   State<RecycleViewWines> createState() => _RecycleViewWinesState();
+  // State<RecycleViewWines> createState() => _RecycleViewWinesState(this.producerService);
 }
 
 class _RecycleViewWinesState extends State<RecycleViewWines> {
-  final ProducerService _producerService = ProducerService();
+  late final ProducerService _producerService;
+
+  _RecycleViewWinesState();
 
   Future<void> _navigateToAddingWine() async {
     final result = await Navigator.pushNamed(context, '/addWine');
@@ -61,6 +64,7 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
   @override
   void initState() {
     super.initState();
+    _producerService = widget.producerService;
   }
 
   @override

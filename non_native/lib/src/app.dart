@@ -5,6 +5,10 @@ import 'package:remote_winery/src/pages/recycle_view_wines.dart';
 import 'package:remote_winery/src/pages/add_wine.dart';
 import 'package:remote_winery/src/pages/edit_wine.dart';
 
+import 'data/repository/log_repository.dart';
+import 'data/repository/server_repository.dart';
+import 'data/repository/wines_repository.dart';
+import 'service/producer_service.dart';
 import 'settings/settings_controller.dart';
 import 'settings/settings_view.dart';
 
@@ -22,6 +26,11 @@ class MyApp extends StatelessWidget {
     //
     // The ListenableBuilder Widget listens to the SettingsController for changes.
     // Whenever the user updates their settings, the MaterialApp is rebuilt.
+    final log_repository = LogRepository();
+    final server_repository = ServerRepository();
+    final wines_repository = WinesRepository();
+    final producerService = ProducerService(wines_repository, server_repository, log_repository);
+
     return ListenableBuilder(
       listenable: settingsController,
       builder: (BuildContext context, Widget? child) {
@@ -74,9 +83,10 @@ class MyApp extends StatelessWidget {
                   case EditWine.routeName:
                     return EditWine();
                   case RecycleViewWines.routeName:
-                    return RecycleViewWines();
+                    return RecycleViewWines(producerService: producerService);
                   default:
-                    return const RecycleViewWines();
+                    return RecycleViewWines(producerService: producerService);
+                    // return const RecycleViewWines(producerService: producerService);
                 }
               },
             );

@@ -4,17 +4,16 @@ import "package:remote_winery/src/data/repository/server_repository.dart";
 import 'package:remote_winery/src/data/repository/log_repository.dart';
 
 class ProducerService {
-  final WinesRepository _winesRepository = WinesRepository();
-  final LogRepository _logRepository = LogRepository();
-  final ServerRepository _serverRepository = ServerRepository();
+  final WinesRepository _winesRepository;
+  final LogRepository _logRepository;
+  final ServerRepository _serverRepository;
 
-  ProducerService() {
+  ProducerService(this._winesRepository, this._serverRepository, this._logRepository){
     _initializeSync();
   }
 
   Future<void> _initializeSync() async {
     try {
-      await Future.delayed(Duration(seconds: 2));
       final List<Wine> wines = await _serverRepository.getWines();
       if (wines.isEmpty) {
         print("No wines retrieved from the server");
