@@ -23,11 +23,12 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
     final result = await Navigator.pushNamed(context, '/addWine');
     if (result != null) {
       final wine = result as Wine;
-      print(wine);
-      await _producerService.addWine(wine);
-      setState(() {
+      _producerService.addWine(wine).then((_) {
+        setState(() {
+        });
       });
-      debugPrint('Wine added');
+      print (wine);
+      debugPrint('Wine added on UI');
     }
   }
 
@@ -35,11 +36,11 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
     final result = await Navigator.pushNamed(context, '/editWine', arguments: wine);
     if (result != null) {
       final newWine = result as Wine;
-      print(newWine);
+      // print(newWine);
       await _producerService.updateWine(newWine);
       setState(() {
       });
-      debugPrint('Wine updated');
+      debugPrint('Wine updated on UI');
     }
   }
 
@@ -57,7 +58,7 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
       await _producerService.removeWine(wine.id);
       setState(() {
       });
-      debugPrint('Wine deleted');
+      debugPrint('Wine deleted on UI');
     }
   } 
 
@@ -158,27 +159,27 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
                                   topLeft: Radius.circular(25.0),
                                   bottomLeft: Radius.circular(25.0),
                                 ),
-                                child: Image.network(
-                                  wine.photoURL,
-                                  // fit: BoxFit.fitHeight,
-                                  fit: BoxFit.contain,
-                                  loadingBuilder: (context, child, loadingProgress) {
-                                    if (loadingProgress == null) {
-                                      return child;
-                                    } else {
-                                      return Center(
-                                        child: CircularProgressIndicator(
-                                          value: loadingProgress.expectedTotalBytes != null
-                                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
-                                              : null,
-                                        ),
-                                      );
-                                    }
-                                  },
-                                  errorBuilder: (context, error, stackTrace) {
-                                    return Icon(Icons.error, size: 40, color: Colors.redAccent);
-                                  },
-                                ),
+                                // child: Image.network(
+                                //   wine.photoURL,
+                                //   // fit: BoxFit.fitHeight,
+                                //   fit: BoxFit.contain,
+                                //   loadingBuilder: (context, child, loadingProgress) {
+                                //     if (loadingProgress == null) {
+                                //       return child;
+                                //     } else {
+                                //       return Center(
+                                //         child: CircularProgressIndicator(
+                                //           value: loadingProgress.expectedTotalBytes != null
+                                //               ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                                //               : null,
+                                //         ),
+                                //       );
+                                //     }
+                                //   },
+                                //   errorBuilder: (context, error, stackTrace) {
+                                //     return Icon(Icons.error, size: 40, color: Colors.redAccent);
+                                //   },
+                                // ),
                               ),
                             ),
 

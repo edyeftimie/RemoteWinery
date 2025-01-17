@@ -54,21 +54,21 @@ class WineForm extends StatelessWidget {
             controller: _nameController,
             decoration: InputDecoration(labelText: 'Name'),
             validator: (value) {
-              if (value != intialData.nameOfProducer) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a name';
-                }
-                if (value.length < 3) {
-                  return 'Please enter a name with at least 3 characters';
-                }
-                // the name must contain only letters and spaces
-                if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value)) {
-                  return 'Please enter a name with only letters and spaces';
-                }
-                if (value.length > 50) {
-                  return 'Please enter a name with at most 50 characters';
-                }
-              }
+              // if (value != intialData.nameOfProducer) {
+              //   if (value == null || value.isEmpty) {
+              //     return 'Please enter a name';
+              //   }
+              //   if (value.length < 3) {
+              //     return 'Please enter a name with at least 3 characters';
+              //   }
+              //   // the name must contain only letters and spaces
+              //   if (!RegExp(r'^[a-zA-Z ]+$').hasMatch(value)) {
+              //     return 'Please enter a name with only letters and spaces';
+              //   }
+              //   if (value.length > 50) {
+              //     return 'Please enter a name with at most 50 characters';
+              //   }
+              // }
               return null;
             }
           ),
@@ -76,27 +76,27 @@ class WineForm extends StatelessWidget {
             controller: _yearController,
             decoration: InputDecoration(labelText: 'Year'),
             validator: (value) {
-              if (value != intialData.yearOfProduction.toString()) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a year';
-                }
-                if (int.tryParse(value) == null) {
-                  return 'Please enter a valid year';
-                }
-                if (int.parse(value) < 1900 || int.parse(value) > 2024) {
-                  return 'Please enter a year between 1900 and 2024';
-                }
-              }
-              return null;
+              // if (value != intialData.yearOfProduction.toString()) {
+              //   if (value == null || value.isEmpty) {
+              //     return 'Please enter a year';
+              //   }
+              //   if (int.tryParse(value) == null) {
+              //     return 'Please enter a valid year';
+              //   }
+              //   if (int.parse(value) < 1900 || int.parse(value) > 2024) {
+              //     return 'Please enter a year between 1900 and 2024';
+              //   }
+              // }
+              return null; // means no error
             }
           ),
           TextFormField(
             controller: _typeController,
             decoration: InputDecoration(labelText: 'Type'),
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a type';
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter a type';
+              // }
               return null;
             }
           ),
@@ -104,9 +104,9 @@ class WineForm extends StatelessWidget {
             controller: _regionController,
             decoration: InputDecoration(labelText: 'Region'),
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter a region';
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter a region';
+              // }
               return null;
             }
           ),
@@ -114,9 +114,9 @@ class WineForm extends StatelessWidget {
             controller: _ingredientsController,
             decoration: InputDecoration(labelText: 'Ingredients'),
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter ingredients';
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter ingredients';
+              // }
               return null;
             }
           ),
@@ -124,15 +124,15 @@ class WineForm extends StatelessWidget {
             controller: _caloriesController,
             decoration: InputDecoration(labelText: 'Calories'),
             validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Please enter calories';
-              }
-              if (int.tryParse(value) == null) {
-                return 'Please enter a valid number';
-              }
-              if (int.parse(value) < 0) {
-                return 'Please enter a positive number';
-              }
+              // if (value == null || value.isEmpty) {
+              //   return 'Please enter calories';
+              // }
+              // if (int.tryParse(value) == null) {
+              //   return 'Please enter a valid number';
+              // }
+              // if (int.parse(value) < 0) {
+              //   return 'Please enter a positive number';
+              // }
               return null;
             }
           ),
@@ -140,17 +140,17 @@ class WineForm extends StatelessWidget {
             controller: _photoURLController,
             decoration: InputDecoration(labelText: 'Photo URL'),
             validator: (value) {
-              if (value != intialData.photoURL) {
-                if (value == null || value.isEmpty) {
-                  return 'Please enter a photo URL';
-                }
-                if (!Uri.parse(value).isAbsolute) {
-                  return 'Please enter a valid URL';
-                }
-                // if (!value.endsWith('.jpg') && !value.endsWith('.png')) {
-                //   return 'Please enter a valid image URL';
-                // }
-              }
+            //   if (value != intialData.photoURL) {
+            //     if (value == null || value.isEmpty) {
+            //       return 'Please enter a photo URL';
+            //     }
+            //     if (!Uri.parse(value).isAbsolute) {
+            //       return 'Please enter a valid URL';
+            //     }
+            //     // if (!value.endsWith('.jpg') && !value.endsWith('.png')) {
+            //     //   return 'Please enter a valid image URL';
+            //     // }
+            //   }
               return null;
             }
           ),

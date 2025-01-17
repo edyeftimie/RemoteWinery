@@ -2,6 +2,7 @@ import "package:remote_winery/src/domain/model/wine.dart";
 import "package:remote_winery/src/data/repository/wines_repository.dart";
 import "package:remote_winery/src/data/repository/server_repository.dart";
 import 'package:remote_winery/src/data/repository/log_repository.dart';
+import 'dart:async';
 
 class ProducerService {
   final WinesRepository _winesRepository;
@@ -9,10 +10,11 @@ class ProducerService {
   final ServerRepository _serverRepository;
 
   ProducerService(this._winesRepository, this._serverRepository, this._logRepository){
-    _initializeSync();
+    initializeSync();
   }
 
-  Future<void> _initializeSync() async {
+  Future<void> initializeSync() async {
+    print ("INITIALIZING: Syncing data");
     try {
       final List<Wine> wines = await _serverRepository.getWines();
       if (wines.isEmpty) {
@@ -29,47 +31,107 @@ class ProducerService {
   }
 
   Future addWine(Wine wine) async {
-    try {
-      await _winesRepository.addWine(wine);
-      final serverWineId = await _serverRepository.addWine(wine);
-      if (serverWineId == -1) {
-        print ("Add failed in the server");
-        final log = {
-          "type": "POST",
-          "wine": {
-            "id": wine.id,
-            "name": wine.nameOfProducer,
-            "type": wine.type,
-            "yearOfProduction": wine.yearOfProduction,
-            "region": wine.region,
-            "listOfIngredients": wine.listOfIngredients,
-            "calories": wine.calories,
-            "photoURL": wine.photoURL,
-          }
-        };
-        _logRepository.addLog(log);
-        return false;
-      } else {
-        var oldID = wine.id;
-        wine.id = serverWineId;
-        print ("Add completed in the server");
-        var status = await _winesRepository.updateWineID(wine, oldID);
-        if (status) {
-          print ("Update completed in the local database");
-          _logRepository.editLogsWineID(oldID, serverWineId);
-          return true;
+    final completer = Completer<void>();
+    _winesRepository.addWine(wine).then((_) {
+      print ("ADD: Add completed in the local database");
+      _serverRepository.addWine(wine).then((serverWineId) {
+        // print ("ADD: DEBUGGING");
+        // print ("ADD: Server add status: $serverWineId");  // Debugging line
+        if (serverWineId == -1) {
+          print ("ADD: Add failed in the server");
+          final log = {
+            "type": "POST",
+            "wine": {
+              "id": wine.id,
+              "name": wine.nameOfProducer,
+              "type": wine.type,
+              "yearOfProduction": wine.yearOfProduction,
+              "region": wine.region,
+              "listOfIngredients": wine.listOfIngredients,
+              "calories": wine.calories,
+              "photoURL": wine.photoURL,
+            }
+          };
+          _logRepository.addLog(log);
+          completer.completeError("ADD: Add failed in the server");
         } else {
-          print ("Update failed in the local database");
-          return false;
+          var oldID = wine.id;
+          wine.id = serverWineId;
+          print ("ADD: Add completed in the server");
+          _winesRepository.updateWineID(wine, oldID).then((status) {
+            if (status) {
+              print ("ADD: Update completed in the local database");
+              _logRepository.editLogsWineID(oldID, serverWineId);
+              completer.complete();
+            } else {
+              print ("ADD: Update failed in the local database");
+              completer.completeError("ADD: Update failed in the local database");
+            }
+          }).catchError((e) {
+            print("ADD: Error updating wine's id: $e");
+            completer.completeError("ADD: Error updating wine's id: $e");
+          });
         }
-      }
-    } catch (e) {
-      print("Error adding wine: $e");
-      return false;
-    }
+      }).catchError((e) {
+        print("ADD: Error adding wine on server: $e");
+        completer.completeError("ADD: Error adding wine on server: $e");
+      });
+    }).catchError((e) {
+      print("ADD: Error adding wine locally: $e");
+      completer.completeError("ADD: Error adding wine locally: $e");
+    });
+    completer.future.then((_) {
+      print("ADD: Add completed");
+    }).catchError((e) {
+      print("ADD: Add failed: $e");
+    });
+
+    return completer.future;
+
+    // _winesRepository.addWine(wine).then((_) {
+    //   print ("ADD: Add completed in the local database");
+    //   _serverRepository.addWine(wine).then((serverWineId) {
+    //     if (serverWineId == -1) {
+    //       print ("ADD: Add failed in the server");
+    //       final log = {
+    //         "type": "POST",
+    //         "wine": {
+    //           "id": wine.id,
+    //           "name": wine.nameOfProducer,
+    //           "type": wine.type,
+    //           "yearOfProduction": wine.yearOfProduction,
+    //           "region": wine.region,
+    //           "listOfIngredients": wine.listOfIngredients,
+    //           "calories": wine.calories,
+    //           "photoURL": wine.photoURL,
+    //         }
+    //       };
+    //       _logRepository.addLog(log);
+    //     } else {
+    //       var oldID = wine.id;
+    //       wine.id = serverWineId;
+    //       print ("ADD: Add completed in the server");
+    //       _winesRepository.updateWineID(wine, oldID).then((status) {
+    //         if (status) {
+    //           print ("ADD: Update completed in the local database");
+    //           _logRepository.editLogsWineID(oldID, serverWineId);
+    //         } else {
+    //           print ("ADD: Update failed in the local database");
+    //         }
+    //       }).catchError((e) {
+    //         print("ADD: Error updating wine's id: $e");
+    //       });
+    //     }
+    //   }).catchError((e) {
+    //     print("ADD: Error adding wine on server: $e");
+    //   });
+    // }).catchError((e) {
+    //   print("ADD: Error adding wine locally: $e");
+    // });
   }
 
   Future _syncLogs() async {
+    print ("SYNCING: Syncing logs");
     final logs = _logRepository.getLogs();
     for (var log in logs) {
       print ("Syncing log: $log");
@@ -89,66 +151,107 @@ class ProducerService {
     }
   }
 
-  // bool removeWine(int wineID) {
   Future removeWine(int wineID) async {
-    try {
-      await _winesRepository.removeWine(wineID);
-      final status = await _serverRepository.removeWine(wineID);
-      if (!status) {
-        print ("Remove failed in the server");
-        final log = {
-          "type": "DELETE",
-          "data": {
-            "id": wineID,
-          }
-        };
-        _logRepository.addLog(log);
-        return false;
-      }
-      return true;
-    } catch (e) {
-      print("Error removing wine: $e");
-      return false;
-    }
+    final completer = Completer<void>();
+    _winesRepository.removeWine(wineID).then((_) {
+      print("REMOVE: Remove completed in the local database");
+      _serverRepository.removeWine(wineID).then((status) {
+        if (!status) {
+          print("REMOVE: Remove failed in the server");
+          final log = {
+            "type": "DELETE",
+            "data": {
+              "id": wineID,
+            }
+          };
+          _logRepository.addLog(log);
+        } else {
+          print("REMOVE: Remove completed in the server");
+          completer.complete();
+        }
+      }).catchError((e) {
+        print("REMOVE: Error removing wine on server: $e");
+        completer.completeError(e);
+      });
+    }).catchError((e) {
+      print("REMOVE: Error removing wine locally: $e");
+      completer.completeError(e);
+    });
+    return completer.future;
+    // try {
+    //   await _winesRepository.removeWine(wineID);
+    //   final status = await _serverRepository.removeWine(wineID);
+    //   if (!status) {
+    //     print ("Remove failed in the server");
+    //     final log = {
+    //       "type": "DELETE",
+    //       "data": {
+    //         "id": wineID,
+    //       }
+    //     };
+    //     _logRepository.addLog(log);
+    //     return false;
+    //   }
+    //   return true;
+    // } catch (e) {
+    //   print("Error removing wine: $e");
+    //   return false;
+    // }
   }
 
-  // bool updateWine(Wine wine) {
   Future updateWine(Wine wine) async {
-    try {
-      await _winesRepository.updateWine(wine);
-      final status = await _serverRepository.updateWine(wine);
-      if (!status) {
-        print ("Update failed in the server");
-        final log = {
-          "type": "PUT",
-          "wine": {
-            "id": wine.id,
-            "name": wine.nameOfProducer,
-            "type": wine.type,
-            "yearOfProduction": wine.yearOfProduction,
-            "region": wine.region,
-            "listOfIngredients": wine.listOfIngredients,
-            "calories": wine.calories,
-            "photoURL": wine.photoURL,
-          }
-        };
-        _logRepository.addLog(log);
-        return false;
-      }
-      return true;
-    } catch (e) {
-      print("Error updating wine: $e");
-      return false;
-    }
+    final completer = Completer<void>();
+    _winesRepository.updateWine(wine).then((_) {
+      print("UPDATE: Update completed in the local database");
+
+      _serverRepository.updateWine(wine).then((status) {
+        print("UPDATE: Server update status: $status");  // Debugging line
+        print("STATUS");
+        if (!status) {
+          print("UPDATE: Update failed in the server");
+
+          final log = {
+            "type": "PUT",
+            "wine": {
+              "id": wine.id,
+              "name": wine.nameOfProducer,
+              "type": wine.type,
+              "yearOfProduction": wine.yearOfProduction,
+              "region": wine.region,
+              "listOfIngredients": wine.listOfIngredients,
+              "calories": wine.calories,
+              "photoURL": wine.photoURL,
+            }
+          };
+          _logRepository.addLog(log);
+        } else {
+          print("UPDATE: Update completed in the server");
+          completer.complete();
+        }
+      }).catchError((e) {
+        print("UPDATE: Error updating wine on server: $e");
+        completer.completeError(e);
+      });
+    }).catchError((e) {
+      print("UPDATE: Error updating wine locally: $e");
+      completer.completeError(e);
+    });
+    completer.future.then((_) {
+      print("UPDATE: Update completed");
+    }).catchError((e) {
+      print("UPDATE: Update failed: $e");
+    });
+    return completer.future;
   }
 
   // List<Wine> getWines() {
   Future<List<Wine>> getWines() async {
+    // return await _serverRepository.getWines();
     return await _winesRepository.getWines();
   }
 
-  // Wine getWineById(int id) {
-  Future getWineById(int id) {
-    return _winesRepository.getWineById(id);
-  }
+  // // Wine getWineById(int id) {
+  // Future getWineById(int id) {
+  //   return _winesRepository.getWineById(id);
+  // }
 }
