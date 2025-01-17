@@ -23,9 +23,8 @@ class _RecycleViewWinesState extends State<RecycleViewWines> {
     final result = await Navigator.pushNamed(context, '/addWine');
     if (result != null) {
       final wine = result as Wine;
-      _producerService.addWine(wine).then((_) {
-        setState(() {
-        });
+      await _producerService.addWine(wine);
+      setState(() {
       });
       print (wine);
       debugPrint('Wine added on UI');
