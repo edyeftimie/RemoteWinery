@@ -1,7 +1,13 @@
 -> server/ 
+    //works on power shell
     node app.js
 
 -> db
+    //works on power shell
+    //works only on remote_winery directory
+    pg_ctl -D "C:\Program Files\PostgreSQL\17\data" start
+    psql -U postgres -d postgres
+
     \dt - list tables
     \d table_name - list columns of table
     \d+ table_name - list columns with details
@@ -9,7 +15,5 @@
     \c database_name - connect to database
     \q - quit
     
-    pg_ctl -D "C:\Program Files\PostgreSQL\17\data" start
-    psql -U postgres -d postgres
 
 

@@ -12,6 +12,22 @@ class ServerRepository {
     _initializeConnection();
   }
 
+  Future<bool> isServerConnected() async {
+    if (!_isConnected) {
+      await _initializeConnection();
+      if (!_isConnected) {
+        print('ERROR connecting to the server');
+        return false;
+      } else {
+        print('Connected to the server');
+        return true;
+      }
+    } else {
+      print('Already connected to the server');
+      return true;
+    }
+  }
+
   Future<void> _initializeConnection() async {
     try {
       _channel = WebSocketChannel.connect(
@@ -98,37 +114,6 @@ class ServerRepository {
       }
     }
   }
-
-  // void _handleIncomingMessage(String message) {
-  //   var response = jsonDecode(message);
-  //   print ('RESPONSE: $response');
-  //   // Check if the response has a matching pending request
-  //   if (_pendingRequests.containsKey(response['type'])) {
-  //     var completer = _pendingRequests[response['type']];
-
-  //     if (response['message'] == 'Data fetched' || response['message'] == 'Data inserted' || response['message'] == 'Data updated' || response['message'] == 'Data deleted') {
-  //       if (response['message'] == 'Data inserted') {
-  //           completer?.complete(response['data']['id']);
-  //       } else if (response['message'] == 'Data fetched') {
-  //         List<Wine> wines = [];
-  //         print (response['data']);
-  //         print (response['data'].runtimeType);
-  //         print ("RESPONSE DATA");
-  //         for (var wine in response['data']) {
-  //           wines.add(Wine(wine['id'], wine['nameOfProducer'], wine['type'], wine['yearOfProduction'], wine['region'], wine['listOfIngredients'], wine['calories'], wine['photoURL']));
-  //         }
-  //         completer?.complete(wines);
-  //       } else if (response['message'] == 'Data updated' || response['message'] == 'Data deleted') {
-  //         completer?.complete(true);
-  //       }
-  //     } else {
-  //       completer?.completeError('Error: ${response['message']}');
-  //     }
-
-  //     // Remove the completed request from the map
-  //     _pendingRequests.remove(response['type']);
-  //   }
-  // }
 
   Future<List<Wine>> getWines() async {
     if (!_isConnected) {
