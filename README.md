@@ -1,5 +1,5 @@
 # RemoteWinery
-A native Android app built with Flutter, allowing users to manage their wine collection through a user-friendly interface.
+A native Android app built with Flutter & Node.js, allowing users to manage their wine collection through a user-friendly interface.
 
 ## Frontend - Flutter
 - **CRUD Operations**: Create, edit, delete, and view wines in a dynamic list.
